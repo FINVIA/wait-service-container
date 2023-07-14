@@ -7,7 +7,7 @@ The output container contains only the release binary, `wait-service`, located a
 The intended usage pattern goes something like this:
 
 ```docker
-FROM wait-service-container AS wait-service
+FROM ghcr.io/finvia/wait-service-container AS wait-service
 FROM alpine AS build
 
 # do your build stuff here
