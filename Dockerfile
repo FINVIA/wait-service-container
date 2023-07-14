@@ -1,7 +1,15 @@
-FROM rust:1.71.0 AS build
+ARG BUILDER_IMAGE
 
-RUN cargo install --root / wait-service
+FROM ${BUILDER_IMAGE} AS builder
+
+RUN git clone https://github.com/magiclen/wait-service
+
+WORKDIR /root/src/wait-service
+
+RUN cargo build --release -q
 
 FROM scratch
 
-COPY --from=build /bin/wait-service /bin/
+COPY --from=builder \
+    /root/src/wait-service/target/x86_64-unknown-linux-musl/release/wait-service \
+    /bin/
