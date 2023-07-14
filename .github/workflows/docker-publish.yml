@@ -60,6 +60,16 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.COMMON_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.COMMON_AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+
+      - name: Sign docker into ecr repository
+        uses: aws-actions/amazon-ecr-login@v1
+
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
@@ -72,6 +82,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            BUILDER_IMAGE=533806089962.dkr.ecr.eu-central-1.amazonaws.com/rust-builder:prod
 
 
       # Sign the resulting Docker image digest except on PRs.
