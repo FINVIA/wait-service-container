@@ -10,6 +10,9 @@ RUN cargo build --release -q
 
 FROM scratch
 
+COPY entrypoint.sh \
+    /bin/
+
 COPY --from=builder \
     /root/src/wait-service/target/x86_64-unknown-linux-musl/release/wait-service \
     /bin/
