@@ -4,4 +4,4 @@ RUN cargo install --root / wait-service
 
 FROM scratch
 
-COPY --from=build /bin/wait-service /bin
+COPY --from=build /bin/wait-service /bin/
