@@ -7,19 +7,25 @@ The output container contains only the release binary, `wait-service`, located a
 The intended usage pattern goes something like this:
 
 ```docker
-FROM ghcr.io/finvia/wait-service-container AS wait-service
+FROM ghcr.io/finvia/wait-service-container:main AS wait-service
+
 FROM alpine AS build
 
 # do your build stuff here
 RUN cp "$(which true)" /bin/your-service
 
 FROM scratch
-COPY --from=wait-service /bin/wait-service /bin
+
+COPY --from=wait-service \
+    /bin/wait-service \
+    /usr/local/bin/
+
+COPY --from=wait-service \
+    /bin/entrypoint.sh \
+    /usr/local/bin/
+
 COPY --from=build /bin/your-service /bin
-ENTRYPOINT = [
-    "wait-service",
-    "--tcp", "https://google.com:80",
-    "--",
-    "your-service"
-]
+
+ENTRYPOINT ["entrypoint.sh"]
+CMD ["your-service"]
 ```
