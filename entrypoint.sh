@@ -1,8 +1,8 @@
 #!/bin/sh
 
-set -exo pipefail
-
+echo "Calling update-ca-certificates..."
 update-ca-certificates
-wait-service --tcp $AWAITED_ENDPOINT -- echo "'$AWAITED_ENDPOINT' is up. Booting..."
+echo "Waiting for $AWAITED_ENDPOINT to become available..."
+wait-service --tcp $AWAITED_ENDPOINT -- echo "'$AWAITED_ENDPOINT' is now available. Continuing..."
 
 exec "$@"
